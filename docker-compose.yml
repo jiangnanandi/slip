@@ -6,4 +6,4 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8084:8084"
-      - "40000:40000"
+      # - "40000:40000"
