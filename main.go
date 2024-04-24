@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/robfig/cron"
 	"net/http"
 	slip "slip/http"
 )
@@ -16,5 +17,20 @@ func main() {
 	r.POST("/send-notes", slip.CreateNote)
 	r.GET("/index", slip.Index)
 	r.GET("/notes/:title", slip.GetNote)
+
+	// Create a new cron instance
+	c := cron.New()
+
+	// Define the task to be executed and its schedule
+	c.AddFunc("1 * * * *", func() {
+		// Code to be executed every minute
+		// Add your desired functionality here
+		slip.BuildIndex()
+		println("Running timed task...")
+	})
+
+	// Start the cron scheduler
+	c.Start()
+
 	r.Run(":8084")
 }

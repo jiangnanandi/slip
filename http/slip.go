@@ -43,7 +43,6 @@ func Index(ctx *gin.Context) {
 }
 
 func GetNote(ctx *gin.Context) {
-
 	finalHTML, err := service.GetNote(ctx)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{
@@ -52,4 +51,12 @@ func GetNote(ctx *gin.Context) {
 		return
 	}
 	ctx.Data(http.StatusOK, "text/html", finalHTML)
+}
+
+func BuildIndex() error {
+	err := service.BuildIndex(utils.DefaultNoteDir)
+	if err != nil {
+		return err
+	}
+	return nil
 }
