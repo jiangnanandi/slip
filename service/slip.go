@@ -65,7 +65,15 @@ func GetNote(ctx *gin.Context) ([]byte, error) {
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
-            margin: 20px;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+        }
+		.container {
+            max-width: 800px;
+            padding: 20px;
         }
         h1, h2, h3, h4, h5, h6 {
             margin-top: 20px;
@@ -103,7 +111,9 @@ func GetNote(ctx *gin.Context) ([]byte, error) {
     </style>
 </head>
 <body>
-    {{.Content}}
+    <div class="container">
+        {{.Content}}
+    </div>
 </body>
 </html>`
 
@@ -135,14 +145,57 @@ func GetNote(ctx *gin.Context) ([]byte, error) {
 
 // Build index.html
 func BuildIndex(noteDir string) error {
-	// 生成 index.html 文件，查找 noteDir 目录下的所有文件，列出来（在 HTML 中展示笔记链接）
+	// 生成 index.html 文件
 	indexFile, err := os.Create(noteDir + "/index.html")
 	if err != nil {
 		return err
 	}
 	defer indexFile.Close()
 
-	_, err = indexFile.WriteString("<html><head><title>王掌柜的小纸条</title></head><body><h1>小纸条</h1><ul>")
+	// 写入 HTML 头部和样式
+	_, err = indexFile.WriteString(`
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <title>王掌柜的小纸条</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+			margin: 0 auto;
+    		max-width: 800px;
+        }
+        h1 {
+            color: #333;
+        }
+        .blog-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .blog-item {
+            margin-bottom: 10px;
+        }
+        .blog-item a {
+            color: #337ab7;
+            text-decoration: none;
+			border-bottom: 2px solid yellow; /* 添加标题下划线 */
+            padding-bottom: 5px; /* 增加标题与下划线的间距 */
+        }
+        .blog-item a:hover {
+            text-decoration: underline;
+        }
+		.blog-section-title { /* 添加列表项标题样式 */
+            border-bottom: 1px solid yellow;
+            color: yellow;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>小纸条</h1>
+    <ul class="blog-list">
+`)
 	if err != nil {
 		return err
 	}
@@ -154,18 +207,20 @@ func BuildIndex(noteDir string) error {
 
 	for _, file := range files {
 		if !file.IsDir() {
-			// 获取文件名，不需要扩展名
 			fileName := file.Name()
-			// 去掉扩展名
 			fileName = fileName[:len(fileName)-3]
-			_, err = indexFile.WriteString("<li><a href=\"notes\\" + fileName + "\">" + fileName + "</a></li>")
+			_, err = indexFile.WriteString(`<li class="blog-item"><a href="notes/` + fileName + `">` + fileName + `</a></li>`)
 			if err != nil {
 				return err
 			}
 		}
 	}
 
-	_, err = indexFile.WriteString("</ul></body></html>")
+	_, err = indexFile.WriteString(`
+    </ul>
+</body>
+</html>
+`)
 	if err != nil {
 		return err
 	}
