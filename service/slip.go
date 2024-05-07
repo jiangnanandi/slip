@@ -8,6 +8,7 @@ import (
 	"html/template"
 	"os"
 	"slip/utils"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -178,7 +179,7 @@ func BuildIndex(noteDir string) error {
         .blog-item a {
             color: #337ab7;
             text-decoration: none;
-			border-bottom: 2px solid yellow; /* 添加标题下划线 */
+			border-bottom: 1px solid rgb(226, 112, 24); /* 添加标题下划线 */
             padding-bottom: 5px; /* 增加标题与下划线的间距 */
         }
         .blog-item a:hover {
@@ -208,10 +209,12 @@ func BuildIndex(noteDir string) error {
 	for _, file := range files {
 		if !file.IsDir() {
 			fileName := file.Name()
-			fileName = fileName[:len(fileName)-3]
-			_, err = indexFile.WriteString(`<li class="blog-item"><a href="notes/` + fileName + `">` + fileName + `</a></li>`)
-			if err != nil {
-				return err
+			if strings.HasSuffix(fileName, ".md") {
+				fileName = fileName[:len(fileName)-3]
+				_, err = indexFile.WriteString(`<li class="blog-item"><a href="notes/` + fileName + `">` + fileName + `</a></li>`)
+				if err != nil {
+					return err
+				}
 			}
 		}
 	}

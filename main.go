@@ -25,8 +25,8 @@ func main() {
 	c.AddFunc("1 * * * *", func() {
 		// Code to be executed every minute
 		// Add your desired functionality here
-		slip.BuildIndex()
 		println("Running timed task...")
+		slip.BuildIndex()
 	})
 
 	// Start the cron scheduler
