@@ -26,6 +26,8 @@ WORKDIR /app
 # 从构建环境中复制可执行文件
 COPY --from=builder /app/slip .
 
+COPY config/config.yaml ./config/config.yaml
+
 RUN mkdir -p /var/www/slip/notes && chmod 777 /var/www/slip/notes
 
 # 暴露端口(如果您的应用需要)
