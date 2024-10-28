@@ -27,7 +27,7 @@ func Login(c *gin.Context) {
 	}
 
 	if config.AppConfig.Keys["client_id"] != clientID {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "无效的密钥 ID"})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "无效的客户端 ID"})
 		return
 	}
 

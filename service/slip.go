@@ -14,6 +14,7 @@ import (
 )
 
 func SaveNote(ctx *gin.Context, note utils.Note) error {
+	// 解析笔记，提取原数据
 	// 将 Note 内容写入到指定目录
 	if err := utils.WriteNote(utils.DefaultNoteDir, note); err != nil {
 		return err
