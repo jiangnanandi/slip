@@ -7,10 +7,10 @@ import (
 	"github.com/gomarkdown/markdown/parser"
 	"html/template"
 	"os"
+	"slip/api/defines"
+	"slip/internal/config"
 	"slip/internal/pkg/utils"
 	"strings"
-	"slip/api/types"
-	"slip/internal/config"
 
 	"github.com/gin-gonic/gin"
 )

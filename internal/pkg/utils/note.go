@@ -2,7 +2,7 @@ package utils
 
 import (
 	"os"
-	"slip/api/types"
+	"slip/api/defines"
 )
 
 func WriteNote(noteDir string, note types.Notes) error {

@@ -2,9 +2,9 @@ package controller
 
 import (
 	"net/http"
-	"slip/internal/service"
-	"slip/api/types"
+	"slip/api/defines"
 	"slip/internal/config"
+	"slip/internal/service"
 
 	"github.com/gin-gonic/gin"
 )

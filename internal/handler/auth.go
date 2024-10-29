@@ -5,13 +5,12 @@ import (
 	"crypto/cipher"
 	"encoding/base64"
 	"net/http"
+	"slip/api/defines"
 	"slip/internal/pkg/utils"
-	"slip/api/types"
 
 	"github.com/gin-gonic/gin"
 	"slip/internal/config"
 )
-
 
 const (
 	expectedString = "slip"
@@ -24,8 +23,6 @@ func Login(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
-	
 
 	if config.AppConfig.Keys["client_id"] != auth.ClientID {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "无效的客户端 ID"})
