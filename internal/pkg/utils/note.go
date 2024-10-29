@@ -2,9 +2,10 @@ package utils
 
 import (
 	"os"
+	"slip/api/types"
 )
 
-func WriteNote(noteDir string, note Note) error {
+func WriteNote(noteDir string, note types.Notes) error {
 	file, err := os.Create(noteDir + "/" + note.Title + ".md")
 	if err != nil {
 		return err

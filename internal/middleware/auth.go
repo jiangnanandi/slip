@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"net/http"
-	"slip/utils"
+	"slip/internal/pkg/utils"
 	"strings"
 
 	"github.com/gin-gonic/gin"

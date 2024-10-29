@@ -1,8 +1,9 @@
-package utils
+package types
 
-type Note struct {
+type Notes struct {
 	Title string `json:"title"`
 	Body  string `json:"body"`
+	Meta  NoteMeta `json:"meta"`
 }
 
 // TODO: 以下定义应被单独存放，放到这里不合理
@@ -21,7 +22,3 @@ type NoteMeta struct {
 	Status      Status   `json:"status"`
 	LastModified string   `json:"last_modified"`
 }
-
-const (
-	DefaultNoteDir = "/var/www/slip/notes"
-)

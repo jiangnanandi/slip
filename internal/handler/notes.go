@@ -2,15 +2,16 @@ package controller
 
 import (
 	"net/http"
-	"slip/service"
-	"slip/utils"
+	"slip/internal/service"
+	"slip/api/types"
+	"slip/internal/config"
 
 	"github.com/gin-gonic/gin"
 )
 
 /* 处理请求，将传入的「笔记内容」存储到指定目录，并保存成 title.md 格式的笔记文件 */
 func CreateNote(ctx *gin.Context) {
-	var note utils.Note
+	var note types.Notes
 	if err := ctx.ShouldBindJSON(&note); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
@@ -54,7 +55,7 @@ func GetNote(ctx *gin.Context) {
 }
 
 func BuildIndex() error {
-	err := service.BuildIndex(utils.DefaultNoteDir)
+	err := service.BuildIndex(config.AppConfig.Notes.Dir)
 	if err != nil {
 		return err
 	}

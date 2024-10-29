@@ -3,9 +3,9 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/robfig/cron"
-	slip "slip/controller"
-	"slip/router"
-	"slip/config"
+	slip "slip/internal/handler"
+	"slip/internal/router"
+	"slip/internal/config"
 )
 
 func main() {

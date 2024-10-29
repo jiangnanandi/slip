@@ -3,8 +3,8 @@ package router
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"slip/controller"
-	"slip/middleware"
+	"slip/internal/handler"
+	"slip/internal/middleware"
 )
 
 func InitRouter(r *gin.Engine) {

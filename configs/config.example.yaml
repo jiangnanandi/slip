@@ -1,0 +1,8 @@
+keys:
+     client_id: "your_client_id" # 客户端ID
+     secret_key: "your_secret_key1" # 密钥 16字节
+notes:
+     dir: "/var/www/slip/notes" # 笔记目录
+     default_author: "slip" # 默认作者
+     default_status: "draft" # 默认状态
+     default_tags:  ["slip"] # 默认标签
