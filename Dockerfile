@@ -14,7 +14,7 @@ RUN go mod download
 COPY . .
 
 # 构建 Go 应用程序
-RUN go build -o slip main.go
+RUN go build -o slip ./cmd/main.go
 
 # 使用轻量级的 Alpine 作为最终镜像
 # FROM alpine:latest
@@ -26,9 +26,8 @@ WORKDIR /app
 # 从构建环境中复制可执行文件
 COPY --from=builder /app/slip .
 
-COPY config/config.yaml ./config/config.yaml
+COPY configs/config.yaml ./configs/config.yaml
 
-RUN mkdir -p /var/www/slip/notes && chmod 777 /var/www/slip/notes
 
 # 暴露端口(如果您的应用需要)
 EXPOSE 8084

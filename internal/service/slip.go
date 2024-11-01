@@ -2,28 +2,26 @@ package service
 
 import (
 	"bytes"
+	"html/template"
+	"os"
+	"slip/api/defines"
+	"slip/internal/config"
+	"slip/internal/pkg/utils"
+	"strings"
+
 	"github.com/gomarkdown/markdown"
 	"github.com/gomarkdown/markdown/html"
 	"github.com/gomarkdown/markdown/parser"
-	"html/template"
-	"os"
-	"slip/utils"
-	"strings"
 
 	"github.com/gin-gonic/gin"
 )
 
-func SaveNote(ctx *gin.Context, note utils.Note) error {
-	// 将 Note 内容写入到指定目录
-	if err := utils.WriteNote(utils.DefaultNoteDir, note); err != nil {
-		return err
-	}
-	return nil
+func SaveNote(ctx *gin.Context, note defines.Notes) error {
+	return utils.SaveNote(note);
 }
 
 func Index(ctx *gin.Context) ([]byte, error) {
-	// 读取 utils.DefaultNoteDir 目录下的 index.html 文件，并按照 html 标准输出，使请求方能够看到 index.html 内容
-	indexFile := utils.DefaultNoteDir + "/index.html"
+	indexFile := config.AppConfig.Notes.PublishedDir + "/index.html"
 
 	files, err := os.ReadFile(indexFile)
 	if err != nil {
@@ -32,9 +30,8 @@ func Index(ctx *gin.Context) ([]byte, error) {
 	return files, nil
 }
 
-func GetNote(ctx *gin.Context) ([]byte, error) {
-	title := ctx.Param("title")
-	noteFile := utils.DefaultNoteDir + "/" + title + ".md"
+func GetNote(ctx *gin.Context, title string) ([]byte, error) {
+	noteFile := config.AppConfig.Notes.PublishedDir + "/" + title + ".md"
 	fileContent, err := os.ReadFile(noteFile)
 	if err != nil {
 		return nil, err
@@ -145,9 +142,10 @@ func GetNote(ctx *gin.Context) ([]byte, error) {
 }
 
 // Build index.html
-func BuildIndex(noteDir string) error {
+func BuildIndex() error {
+	dir := config.AppConfig.Notes.PublishedDir
 	// 生成 index.html 文件
-	indexFile, err := os.Create(noteDir + "/index.html")
+	indexFile, err := os.Create(dir + "/index.html")
 	if err != nil {
 		return err
 	}
@@ -201,7 +199,7 @@ func BuildIndex(noteDir string) error {
 		return err
 	}
 
-	files, err := os.ReadDir(noteDir)
+	files, err := os.ReadDir(dir)
 	if err != nil {
 		return err
 	}

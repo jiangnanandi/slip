@@ -5,34 +5,32 @@ import (
 	"crypto/cipher"
 	"encoding/base64"
 	"net/http"
-	"slip/utils"
+	"slip/internal/pkg/utils"
+	"slip/api/defines"
 
 	"github.com/gin-gonic/gin"
-	"slip/config"
+	"slip/internal/config"
 )
-
 
 const (
 	expectedString = "slip"
 )
 
 func Login(c *gin.Context) {
-	// 修改为从查询参数获取 KeyID 和 EncryptedString
-	encryptedString := c.Query("encrypted_string")
-	clientID := c.Query("client_id")
+	var auth defines.Auth
 
-	if encryptedString == "" || clientID == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "缺少参数"})
+	if err := c.ShouldBindQuery(&auth); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	if config.AppConfig.Keys["client_id"] != clientID {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "无效的密钥 ID"})
+	if config.AppConfig.Keys["client_id"] != auth.ClientID {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "无效的客户端 ID"})
 		return
 	}
 
 	// 解密字符串
-	decrypted, err := decrypt(encryptedString, config.AppConfig.Keys["secret_key"])
+	decrypted, err := decrypt(auth.EncryptedString, config.AppConfig.Keys["secret_key"])
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "解密失败"})
 		return
