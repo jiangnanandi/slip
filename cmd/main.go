@@ -1,11 +1,13 @@
 package main
 
 import (
+	"slip/internal/config"
+	slip "slip/internal/handler"
+	initialize "slip/internal/pkg"
+	"slip/internal/router"
+
 	"github.com/gin-gonic/gin"
 	"github.com/robfig/cron"
-	slip "slip/controller"
-	"slip/router"
-	"slip/config"
 )
 
 func main() {
@@ -13,6 +15,12 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	err = initialize.InitializeDirectories()
+	if err != nil {
+		panic(err)
+	}
+
 	r := gin.Default()
 
 	router.InitRouter(r)

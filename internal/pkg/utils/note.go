@@ -2,10 +2,11 @@ package utils
 
 import (
 	"os"
+	"slip/api/defines"
 )
 
-func WriteNote(noteDir string, note Note) error {
-	file, err := os.Create(noteDir + "/" + note.Title + ".md")
+func SaveNote(note defines.Notes) error {
+	file, err := os.Create(note.Dir + "/" + note.Title + ".md")
 	if err != nil {
 		return err
 	}

@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
-	"slip/config"
+	"slip/internal/config"
 )
 
 
