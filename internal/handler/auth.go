@@ -5,8 +5,8 @@ import (
 	"crypto/cipher"
 	"encoding/base64"
 	"net/http"
-	"slip/api/defines"
 	"slip/internal/pkg/utils"
+	"slip/api/defines"
 
 	"github.com/gin-gonic/gin"
 	"slip/internal/config"
@@ -17,7 +17,7 @@ const (
 )
 
 func Login(c *gin.Context) {
-	var auth types.Auth
+	var auth defines.Auth
 
 	if err := c.ShouldBindQuery(&auth); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

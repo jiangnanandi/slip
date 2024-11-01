@@ -5,8 +5,8 @@ import (
 	"slip/api/defines"
 )
 
-func WriteNote(noteDir string, note types.Notes) error {
-	file, err := os.Create(noteDir + "/" + note.Title + ".md")
+func SaveNote(note defines.Notes) error {
+	file, err := os.Create(note.Dir + "/" + note.Title + ".md")
 	if err != nil {
 		return err
 	}
