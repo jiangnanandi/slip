@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <title>{{.Title}}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+			margin: 0 auto;
+    		max-width: 800px;
+        }
+        h1 {
+            color: #333;
+        }
+        .blog-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .blog-item {
+            margin-bottom: 10px;
+        }
+        .blog-item a {
+            color: #337ab7;
+            text-decoration: none;
+			border-bottom: 1px solid rgb(226, 112, 24); /* 添加标题下划线 */
+            padding-bottom: 5px; /* 增加标题与下划线的间距 */
+        }
+        .blog-item a:hover {
+            text-decoration: underline;
+        }
+		.blog-section-title { /* 添加列表项标题样式 */
+            border-bottom: 1px solid yellow;
+            color: yellow;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>{{.Title}}</h1>
+    <ul class="blog-list">
+		{{range .Notes}}
+			<li class="blog-item"><a href="/notes/{{.Title}}">{{.Title}}</a></li>
+		{{end}}
+    </ul>
+</body>
+</html>

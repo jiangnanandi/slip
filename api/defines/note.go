@@ -36,7 +36,7 @@ type NoteMeta struct {
 }
 
 func (n *Notes) Build() error {
-	err := n.decodeMeta()
+	err := n.DecodeMeta()
 	if err != nil {
 		return err
 	}
@@ -58,7 +58,7 @@ func (n *Notes) Build() error {
 	return nil
 }
 
-func (n *Notes) decodeMeta() error {
+func (n *Notes) DecodeMeta() error {
 	re := regexp.MustCompile(`(?s)---\s*(.*?)\s*---`)
 	matches := re.FindStringSubmatch(n.Body)
 	if len(matches) == 0 {
@@ -69,9 +69,6 @@ func (n *Notes) decodeMeta() error {
 	if err != nil {
 		return err
 	}
-	// 将 note 中的 meta 部分删除
-	n.Body = strings.Replace(n.Body, matches[0], "", 1)
 	n.Meta = meta
-
 	return nil
 }

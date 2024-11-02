@@ -39,14 +39,22 @@ Please note that the current code is still under development, and some features 
    go mod download
    ```
 
-3. Create a configuration file:
+3. Prepare required files:
 
-   In the `config` directory, copy `config.example.yaml` and rename it to `config.yaml`, then modify it according to your actual settings:
+   a. Configuration file:
+   In the `configs` directory, copy `config.example.yaml` and rename it to `config.yaml`, then modify it according to your actual settings:
 
    ```yaml
    keys:
        client_id: "your_client_id" # Client ID
        secret_key: "your_secret_key1" # Secret key (16 bytes)
+   ```
+
+   b. Template file:
+   Create a `templates` directory in the project root and copy the template file from the example:
+   ```bash
+   mkdir -p templates
+   cp templates.example/index.html.tmpl templates/index.html.tmpl
    ```
 
 4. Build the application:

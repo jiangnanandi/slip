@@ -38,14 +38,22 @@ Slip 即「小纸条系统」是一个使用 Go 和 Gin 框架构建的简单笔
    go mod download
    ```
 
-3. 创建配置文件：
+3. 准备必需文件：
 
-   在 `config` 目录下，复制 `config.example.yaml` 文件并重命名为 `config.yaml`，然后根据你的实际情况修改内容：
+   a. 配置文件：
+   在 `configs` 目录下，复制 `config.example.yaml` 文件并重命名为 `config.yaml`，然后根据你的实际情况修改内容：
 
    ```yaml
    keys:
        client_id: "your_client_id" # 客户端ID
        secret_key: "your_secret_key1" # 密钥 16字节
+   ```
+
+   b. 模板文件：
+   在项目根目录下创建 `templates` 目录，并从示例中复制模板文件：
+   ```bash
+   mkdir -p templates
+   cp templates.example/index.html.tmpl templates/index.html.tmpl
    ```
 
 4. 构建应用程序：

@@ -10,6 +10,8 @@ import (
 func InitRouter(r *gin.Engine) {
 	// 公开路由
 	r.GET("/login", controller.Login)
+	r.GET("/index", controller.Index)
+	r.GET("/notes/:title", controller.GetNote)
 
 	// 受保护的路由
 	protected := r.Group("/")
@@ -21,7 +23,5 @@ func InitRouter(r *gin.Engine) {
 			})
 		})
 		protected.POST("/send-notes", controller.CreateNote)
-		protected.GET("/index", controller.Index)
-		protected.GET("/notes/:title", controller.GetNote)
 	}
 }

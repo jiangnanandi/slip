@@ -8,6 +8,7 @@ import (
 type Config struct {
 	Keys map[string]string `yaml:"keys"`
 	Notes NotesConfig `yaml:"notes"`
+	Title string `yaml:"title"`
 }
 
 type NotesConfig struct {

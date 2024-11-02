@@ -27,11 +27,13 @@ func Index(ctx *gin.Context) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
+	// 设置响应头
+	ctx.Header("Content-Type", "text/html; charset=utf-8")
 	return files, nil
 }
 
 func GetNote(ctx *gin.Context, title string) ([]byte, error) {
-	noteFile := config.AppConfig.Notes.PublishedDir + "/" + title + ".md"
+	noteFile := config.AppConfig.Notes.PublishedDir + "/" + title
 	fileContent, err := os.ReadFile(noteFile)
 	if err != nil {
 		return nil, err
@@ -141,89 +143,96 @@ func GetNote(ctx *gin.Context, title string) ([]byte, error) {
 	return []byte(finalHTML), nil
 }
 
-// Build index.html
+// Build Published Notes Index
 func BuildIndex() error {
 	dir := config.AppConfig.Notes.PublishedDir
-	// 生成 index.html 文件
+	files, err := os.ReadDir(dir)
+	if err != nil {
+		return err
+	}
+
 	indexFile, err := os.Create(dir + "/index.html")
 	if err != nil {
 		return err
 	}
 	defer indexFile.Close()
 
-	// 写入 HTML 头部和样式
-	_, err = indexFile.WriteString(`
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8">
-    <title>王掌柜的小纸条</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-			margin: 0 auto;
-    		max-width: 800px;
-        }
-        h1 {
-            color: #333;
-        }
-        .blog-list {
-            list-style-type: none;
-            padding: 0;
-        }
-        .blog-item {
-            margin-bottom: 10px;
-        }
-        .blog-item a {
-            color: #337ab7;
-            text-decoration: none;
-			border-bottom: 1px solid rgb(226, 112, 24); /* 添加标题下划线 */
-            padding-bottom: 5px; /* 增加标题与下划线的间距 */
-        }
-        .blog-item a:hover {
-            text-decoration: underline;
-        }
-		.blog-section-title { /* 添加列表项标题样式 */
-            border-bottom: 1px solid yellow;
-            color: yellow;
-            font-weight: bold;
-            margin-top: 20px;
-        }
-    </style>
-</head>
-<body>
-    <h1>小纸条</h1>
-    <ul class="blog-list">
-`)
-	if err != nil {
-		return err
-	}
-
-	files, err := os.ReadDir(dir)
-	if err != nil {
-		return err
+	templateData := defines.TemplateData{
+		Title: config.AppConfig.Title,
+		Notes: []defines.Notes{},
 	}
 
 	for _, file := range files {
-		if !file.IsDir() {
-			fileName := file.Name()
-			if strings.HasSuffix(fileName, ".md") {
-				fileName = fileName[:len(fileName)-3]
-				_, err = indexFile.WriteString(`<li class="blog-item"><a href="notes/` + fileName + `">` + fileName + `</a></li>`)
-				if err != nil {
-					return err
-				}
+		if !file.IsDir() && strings.HasSuffix(file.Name(), ".md") {
+			title := strings.TrimSuffix(file.Name(), ".md")
+			body, err := os.ReadFile(dir + "/" + file.Name())
+			if err != nil {
+				continue
 			}
+
+			note := defines.Notes{
+				Title: title,
+				Body:  string(body),
+			}
+
+			err = note.Build()
+			if err != nil {
+				continue
+			}
+
+			templateData.Notes = append(templateData.Notes, note)
 		}
 	}
+	if len(templateData.Notes) == 0 {
+		return nil
+	}
 
-	_, err = indexFile.WriteString(`
-    </ul>
-</body>
-</html>
-`)
+	templateData.Sort()
+
+	// 检查模板文件路径
+	templatePath := "templates/index.html.tmpl"
+	if _, err := os.Stat(templatePath); err != nil {
+		return err
+	}
+
+	// 读取模板文件内容进行确认
+	_, err = os.ReadFile(templatePath)
 	if err != nil {
 		return err
 	}
+
+	// 解析模板
+	tmpl, err := template.New("index.html.tmpl").ParseFiles(templatePath)
+	if err != nil {
+		return err
+	}
+
+	// 添加模板内容检查
+	if tmpl.Tree == nil {
+		return err
+	}
+
+	// 先尝试渲染到缓冲区
+	var buf bytes.Buffer
+	if err := tmpl.ExecuteTemplate(&buf, "index.html.tmpl", templateData); err != nil {
+		return err
+	}
+	
+	// 写入文件
+	if _, err := indexFile.Write(buf.Bytes()); err != nil {
+		return err
+	}
+
+	// 确保文件写入完成
+	if err := indexFile.Sync(); err != nil {
+		return err
+	}
+
+	// 获取文件信息
+	_, err = indexFile.Stat()
+	if err != nil {
+		return err
+	}
+	
 	return nil
 }
