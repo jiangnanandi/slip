@@ -28,6 +28,7 @@ COPY --from=builder /app/slip .
 
 COPY configs/config.yaml ./configs/config.yaml
 COPY templates/index.html.tmpl ./templates/index.html.tmpl
+COPY templates/detail.html.tmpl ./templates/detail.html.tmpl
 
 
 # 暴露端口(如果您的应用需要)

@@ -33,7 +33,7 @@ func Index(ctx *gin.Context) ([]byte, error) {
 }
 
 func GetNote(ctx *gin.Context, title string) ([]byte, error) {
-	noteFile := config.AppConfig.Notes.PublishedDir + "/" + title
+	noteFile := config.AppConfig.Notes.PublishedDir + "/" + title + ".md"
 	fileContent, err := os.ReadFile(noteFile)
 	if err != nil {
 		return nil, err
@@ -54,83 +54,22 @@ func GetNote(ctx *gin.Context, title string) ([]byte, error) {
 	// Render the AST to HTML
 	htmlContent := markdown.Render(doc, renderer)
 
-	// Embed the HTML content into the HTML template
-	htmlTemplate := `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Markdown Note Display</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 80vh;
-        }
-		.container {
-            max-width: 800px;
-            padding: 20px;
-        }
-        h1, h2, h3, h4, h5, h6 {
-            margin-top: 20px;
-            margin-bottom: 10px;
-        }
-        p {
-            margin: 10px 0;
-        }
-        img {
-            max-width: 100%%;
-            height: auto;
-        }
-        pre {
-            background-color: #f4f4f4;
-            border: 1px solid #ddd;
-            padding: 10px;
-            overflow: auto;
-        }
-        code {
-            background-color: #f4f4f4;
-            padding: 2px 5px;
-            border-radius: 3px;
-        }
-        blockquote {
-            border-left: 3px solid #ccc;
-            margin: 10px 0;
-            padding-left: 20px;
-            color: #666;
-            font-style: italic;
-        }
-        ul, ol {
-            margin: 10px 0;
-            padding-left: 20px;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        {{.Content}}
-    </div>
-</body>
-</html>`
+	templatePath := "templates/detail.html.tmpl"
+	_, err = os.ReadFile(templatePath)
+	if err != nil {
+		return nil, err
+	}
 
-	tmpl, err := template.New("webpage").Funcs(
-		template.FuncMap{
-			"unescaped": func(htmlContent string) template.HTML {
-				return template.HTML(htmlContent)
-			},
-		},
-	).Parse(htmlTemplate)
+	tmpl, err := template.New("detail.html.tmpl").ParseFiles(templatePath)
 	if err != nil {
 		return nil, err
 	}
 
 	data := struct {
+		Title   string
 		Content template.HTML
 	}{
+		Title:   title,
 		Content: template.HTML(htmlContent),
 	}
 
@@ -138,7 +77,7 @@ func GetNote(ctx *gin.Context, title string) ([]byte, error) {
 	if err := tmpl.Execute(&tpl, data); err != nil {
 		return nil, err
 	}
-
+	
 	finalHTML := tpl.String()
 	return []byte(finalHTML), nil
 }
