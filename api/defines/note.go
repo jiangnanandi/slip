@@ -13,6 +13,7 @@ type Notes struct {
 	Body  string `json:"body"`
 	Dir string
 	Meta  NoteMeta
+	Html  string // 不含meta的html
 }
 
 type Status string
@@ -70,5 +71,6 @@ func (n *Notes) DecodeMeta() error {
 		return err
 	}
 	n.Meta = meta
+	n.Html = strings.Replace(n.Body, matches[0], "", 1)
 	return nil
 }

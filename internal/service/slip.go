@@ -39,12 +39,20 @@ func GetNote(ctx *gin.Context, title string) ([]byte, error) {
 		return nil, err
 	}
 
+	note := defines.Notes{
+		Body:  string(fileContent),
+	}
+	err = note.DecodeMeta()
+	if err != nil {
+		return nil, err
+	}
+
 	// Create a new Markdown parser with extensions
 	extensions := parser.CommonExtensions | parser.AutoHeadingIDs
 	p := parser.NewWithExtensions(extensions)
 
 	// Parse the Markdown content to an AST
-	doc := p.Parse(fileContent)
+	doc := p.Parse([]byte(note.Html))
 
 	// Create a new HTML renderer with options
 	htmlFlags := html.CommonFlags | html.HrefTargetBlank
@@ -98,28 +106,21 @@ func BuildIndex() error {
 
 	templateData := defines.TemplateData{
 		Title: config.AppConfig.Title,
-		Notes: []defines.Notes{},
+		Notes: []defines.Note{},
 	}
 
 	for _, file := range files {
 		if !file.IsDir() && strings.HasSuffix(file.Name(), ".md") {
 			title := strings.TrimSuffix(file.Name(), ".md")
-			body, err := os.ReadFile(dir + "/" + file.Name())
+			fileInfo, err := os.Stat(dir + "/" + file.Name())
 			if err != nil {
-				continue
+				return err
 			}
-
-			note := defines.Notes{
+			ctime := fileInfo.ModTime().Format("2006-01-02")
+			templateData.Notes = append(templateData.Notes, defines.Note{
 				Title: title,
-				Body:  string(body),
-			}
-
-			err = note.Build()
-			if err != nil {
-				continue
-			}
-
-			templateData.Notes = append(templateData.Notes, note)
+				Ctime: ctime,
+			})
 		}
 	}
 	if len(templateData.Notes) == 0 {
