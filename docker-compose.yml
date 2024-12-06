@@ -6,3 +6,8 @@ services:
     ports:
       - "8084:8084"
       # - "40000:40000"
+    volumes:
+      - slip_data:/var/www/slip
+
+volumes:
+  slip_data:
