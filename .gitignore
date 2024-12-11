@@ -1,4 +1,4 @@
-config/config.yaml
+configs/config.yaml
 .idea/
 main
 templates/index.html.tmpl

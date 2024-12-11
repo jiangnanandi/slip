@@ -8,9 +8,15 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/robfig/cron"
+	"context"
+	"slip/internal/pkg/utils"
 )
 
 func main() {
+	// 加载持久化队列
+	ctx := context.Background()
+	go utils.ProcessRetryQueue(ctx)
+
 	err := config.LoadConfig()
 	if err != nil {
 		panic(err)
