@@ -1,5 +1,5 @@
-# 使用 Go 1.19 版本作为基础镜像
-FROM golang:1.19 AS builder
+# 使用 Go 1.21 版本作为基础镜像
+FROM golang:1.21 AS builder
 
 # 设置工作目录
 WORKDIR /app
@@ -16,9 +16,8 @@ COPY . .
 # 构建 Go 应用程序
 RUN go build -o slip ./cmd/main.go
 
-# 使用轻量级的 Alpine 作为最终镜像
-# FROM alpine:latest
-FROM golang:1.19
+# 使用相同版本的 Go 作为运行时镜像
+FROM golang:1.21
 
 # 创建工作目录
 WORKDIR /app
@@ -29,7 +28,6 @@ COPY --from=builder /app/slip .
 COPY configs/config.yaml ./configs/config.yaml
 COPY templates/index.html.tmpl ./templates/index.html.tmpl
 COPY templates/detail.html.tmpl ./templates/detail.html.tmpl
-
 
 # 暴露端口(如果您的应用需要)
 EXPOSE 8084
