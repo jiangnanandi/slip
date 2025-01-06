@@ -123,9 +123,6 @@ func BuildIndex() error {
 			})
 		}
 	}
-	if len(templateData.Notes) == 0 {
-		return nil
-	}
 
 	templateData.Sort()
 

@@ -39,9 +39,15 @@
 <body>
     <h1>{{.Title}}</h1>
     <ul class="blog-list">
-		{{range .Notes}}
-			<li class="blog-item"><a href="/notes/{{.Title}}">{{.Title}}</a> <span class="blog-item-ctime">{{.Ctime}}</span></li>
-		{{end}}
+        {{if .Notes}}
+            {{range .Notes}}
+                <li class="blog-item"><a href="/notes/{{.Title}}">{{.Title}}</a> <span class="blog-item-ctime">{{.Ctime}}</span></li>
+            {{end}}
+        {{else}}
+            <li class="blog-item" style="color: #666; font-style: italic;">
+                还没有任何笔记。开始写作，分享你的第一篇笔记吧！
+            </li>
+        {{end}}
     </ul>
 </body>
 </html>

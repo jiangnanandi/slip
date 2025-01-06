@@ -2,11 +2,11 @@ keys:
      client_id: "your_client_id" # 客户端ID
      secret_key: "your_secret_key1" # 密钥 16字节
 notes:
-     published_dir: "/slip/published" # 已发布笔记目录
-     draft_dir: "/slip/draft" # 草稿笔记目录
-     archived_dir: "/slip/archived" # 已归档笔记目录
-     deleted_dir: "/slip/deleted" # 已删除笔记目录
-     private_dir: "/slip/private" # 私密笔记目录
+     published_dir: "/var/www/slip/published" # 已发布笔记目录
+     draft_dir: "/var/www/slip/draft" # 草稿笔记目录
+     archived_dir: "/var/www/slip/archived" # 已归档笔记目录
+     deleted_dir: "/var/www/slip/deleted" # 已删除笔记目录
+     private_dir: "/var/www/slip/private" # 私密笔记目录
      default_author: "slip" # 默认作者
      default_status: "draft" # 默认状态
      default_tags:  ["slip"] # 默认标签
