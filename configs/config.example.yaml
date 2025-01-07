@@ -11,4 +11,5 @@ notes:
      default_status: "draft" # 默认状态
      default_tags:  ["slip"] # 默认标签
 title: "王掌柜的小纸条" # 网站标题 
-data_dir: "/slip/data" # 数据目录
+data_dir: "data/" # 数据目录
+log_dir: "logs/" # 日志目录

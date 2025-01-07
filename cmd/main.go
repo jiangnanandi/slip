@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"slip/internal/config"
 	slip "slip/internal/handler"
 	initialize "slip/internal/pkg"
@@ -10,6 +11,7 @@ import (
 	"github.com/robfig/cron"
 	"context"
 	"slip/internal/pkg/utils"
+	"path/filepath"
 )
 
 func main() {
@@ -26,6 +28,11 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	logDir := filepath.Join(config.AppConfig.LogDir)
+    if err := utils.InitLogger(logDir); err != nil {
+        panic(fmt.Sprintf("初始化日志失败: %v", err))
+    }
 
 	r := gin.Default()
 

@@ -10,6 +10,7 @@ type Config struct {
 	Notes NotesConfig `yaml:"notes"`
 	Title string `yaml:"title"`
 	DataDir string `yaml:"data_dir"`
+	LogDir string `yaml:"log_dir"`
 }
 
 type NotesConfig struct {
